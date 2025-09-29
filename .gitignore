@@ -1,0 +1,13 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Env dosyası
+.env
+
+# Local cache dosyaları (repo’ya girmesin)
+cache.json
+
+# VSCode / IDE dosyaları
+.vscode/
+.idea/

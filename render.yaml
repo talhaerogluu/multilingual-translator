@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: translate-service
+    env: docker
+    plan: free
+    region: frankfurt   
+    branch: main
+    autoDeploy: true
+    domains:
+      - arctranslateprojectdemo.com  
