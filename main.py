@@ -68,11 +68,13 @@ async def root():
 
 app.mount("/", StaticFiles(directory=".", html=True), name="static")
 
+# main.py (son blok)
 if __name__ == "__main__":
+    import os
     import uvicorn
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=int(os.getenv("PORT", 8000)),
-        reload=bool(os.getenv("RELOAD", "0") == "1"),
+        port=int(os.getenv("PORT", "8000")),   # Render PORT'u geçer
+        reload=os.getenv("RELOAD", "0") == "1"
     )
