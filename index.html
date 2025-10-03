@@ -1,40 +1,128 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Çok Dilli Sayfa</title>
+  <meta charset="UTF-8" />
+  <title>Developer Guide - Multilingual Translator</title>
+  <script type="module" src="./main.js?v=17"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+    header { display: flex; justify-content: space-between; align-items: center; }
+    select { padding: 4px; font-size: 14px; }
+    .section { margin-top: 40px; }
+    .highlight { background: #f4f4f4; padding: 15px; border-left: 3px solid #007bff; }
+    code { background: #eee; padding: 2px 5px; border-radius: 3px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    table, th, td { border: 1px solid #ddd; }
+    th, td { padding: 8px; text-align: left; }
+    th { background: #f9f9f9; }
+  </style>
 </head>
 <body>
+  <header>
+    <h1 data-translate="true">Multilingual Translator - Developer Documentation</h1>
+    <select id="languageSelect"></select>
+  </header>
 
-  <h1 data-translate="true">Bugün kahvaltıda yumurta yedim.</h1>
-  <p data-translate="true">Yarın yapacak çok işim var.</p>
-  <p>Bu alan çevrilmeyecek ve sabit kalacak.</p>
+  <section class="section">
+    <h2 data-translate="true">Introduction</h2>
+    <p lazy-translate="true">
+      This documentation explains how to use the Multilingual Translator project in real-world applications.
+      The tool is designed for developers who want to add instant translation capabilities to their static or
+      dynamic websites. It combines a FastAPI backend with a JavaScript frontend that leverages Web Workers,
+      caching, and asynchronous requests for optimal performance. 
+      With this approach, developers can internationalize applications without rewriting their frontend logic.
+    </p>
+  </section>
 
-    <!-- ✅ data-translate: kısa metinler -->
-  <h1 data-translate="true">Hoş Geldiniz</h1>
-  <p data-translate="true">Bu bir deneme paragrafıdır.</p>
-  
-  <!-- 🧾 lazy-translate: uzun metin (çevrilecek) -->
-  <div lazy-translate="true">
-    Every day, I wake up at around 7:00 a.m. and start my morning routine. The first thing I do is make my bed and wash my face to feel more awake. After that, I usually prepare a light breakfast, like toast with butter and a cup of tea or coffee. Once I’m done eating, I check my schedule for the day and get ready to go to school (or work). I take the bus, which takes about 30 minutes, so I often listen to music or read something during the ride.
+  <section class="section">
+    <h2 data-translate="true">Getting Started</h2>
+    <ol>
+      <li data-translate="true">Clone the repository from GitHub.</li>
+      <li data-translate="true">Install dependencies with pip.</li>
+      <li data-translate="true">Add your Google API key to the .env file.</li>
+      <li data-translate="true">Run <code>uvicorn main:app --reload</code> to start the server.</li>
+    </ol>
+  </section>
 
-    When I arrive, I try to stay focused and productive. I enjoy learning new things and working on different projects. During lunch break, I spend time with my friends—we eat together, talk about our day, and sometimes just relax outside if the weather is nice. In the afternoon, I usually have more classes or meetings, depending on the day. When everything is finished, I head back home, sometimes stopping by a grocery store or a café on the way.
+  <section class="section">
+    <h2 data-translate="true">Architecture Overview</h2>
+    <div lazy-translate="true" class="highlight">
+      The architecture is composed of two main layers: 
+      the backend API built with FastAPI, and the frontend JavaScript code. 
+      The backend exposes a single endpoint <code>/translate</code>, 
+      which proxies requests to the Google Translate API, applies caching, and returns translated text. 
+      The frontend scans the DOM for elements with <code>data-translate</code> attributes, 
+      batches them, and dispatches translation requests through a Web Worker.
+      This ensures that translations do not block the main UI thread and that long texts are processed in parallel.
+    </div>
+  </section>
 
-    In the evening, I like to unwind by watching a TV show, playing a game, or reading a book. I also try to spend some time with my family, especially during dinner. Before going to bed, I often reflect on my day, think about what I could have done better, and plan for tomorrow. It’s a simple routine, but it helps me stay organized and motivated.
-  </div>
-  
+  <section class="section">
+    <h2 data-translate="true">Code Example</h2>
+    <pre class="highlight" lazy-translate="true">
+      <code>
+      from fastapi import FastAPI
+      import httpx, os
 
-  <!-- 🌐 Language Switcher -->
-  <div id="lang-switcher" style="position: fixed; top: 20px; right: 20px; z-index: 999;">
-    <select id="languageSelect" style="padding: 5px;"></select>
-  </div>
+      app = FastAPI()
 
-  <button onclick="localStorage.clear(); sessionStorage.clear(); location.reload()" style="position:fixed; bottom: 10px; right: 10px;">
-  🔁 Dilleri Sıfırla (Test)
-  </button>
+      @app.post("/translate")
+      async def translate_text(req: dict):
+          text = req["text"]
+          target = req["target"]
+          async with httpx.AsyncClient() as client:
+              res = await client.post(
+                  "https://translation.googleapis.com/language/translate/v2",
+                  params={"key": os.getenv("GOOGLE_API_KEY")},
+                  json={"q": text, "target": target}
+              )
+              return res.json()
+      </code>
+    </pre>
+  </section>
 
-  <!-- 🧠 Modüler JS -->
-  <script type="module" src="./main.js?v=14"></script>
+  <section class="section">
+    <h2 data-translate="true">Supported Attributes</h2>
+    <table>
+      <tr>
+        <th data-translate="true">Attribute</th>
+        <th data-translate="true">Description</th>
+      </tr>
+      <tr>
+        <td><code>data-translate="true"</code></td>
+        <td data-translate="true">Marks short text for immediate translation.</td>
+      </tr>
+      <tr>
+        <td><code>lazy-translate="true"</code></td>
+        <td data-translate="true">Marks long text to be translated in chunks.</td>
+      </tr>
+    </table>
+  </section>
 
+  <section class="section">
+    <h2 data-translate="true">Best Practices</h2>
+    <ul>
+      <li data-translate="true">Use caching to reduce API costs.</li>
+      <li data-translate="true">Do not block the UI thread with synchronous requests.</li>
+      <li data-translate="true">Leverage Web Workers for long translations.</li>
+      <li data-translate="true">Always validate input and sanitize output.</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2 data-translate="true">Extended Example</h2>
+    <p lazy-translate="true">
+      Imagine a large knowledge base platform where thousands of articles need to be accessible in multiple languages.
+      Instead of pre-translating all content manually, you can apply this tool to automatically translate articles
+      on demand. This reduces storage costs and ensures that translations are always up to date with the original content.
+      Furthermore, since the system caches previous translations, frequently accessed articles are instantly served from cache.
+      This approach scales effectively and supports real-time user-driven translation requests, which is a major advantage for
+      community-driven platforms, e-learning portals, and technical documentation sites.
+    </p>
+  </section>
+
+  <footer class="section">
+    <p data-translate="true">Created by Talha Eroğlu - 2025</p>
+  </footer>
 </body>
 </html>
